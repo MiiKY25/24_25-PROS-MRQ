@@ -1,40 +1,43 @@
 //Modificar los programas C de nombre actividad9fifocrealee.c y actividad9fifoescribe.c, 
 //para que cuando se ejecute el programa actividad9fifoescribe, envíe al programa actividad9fifocrealee 
 //un mensaje para que éste lo visualice. El programa actividad9fifoescribe será el encargado de crear el fifo. 
-#include <fcntl.h>  // Para las operaciones de open, read y close
-#include <unistd.h> // Para las operaciones del sistema como close
-#include <sys/stat.h> // Para el uso de mknod y la creación de FIFOs
-#include <stdio.h>  // Para printf y otras funciones de entrada/salida
-#include <stdlib.h> // Para exit
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
 
-int main (void) {
+int main(void) {
     int fp;
-    int p, bytesleidos;  bytes se han leído
-    char saludo[] = "Un saludo !!!!!\n", buffer[10]; eídos
+    char buffer[128]; // Buffer más grande para leer mensajes completos
+    int bytesleidos;
 
-    // Crea una FIFO llamada "FIFO2" con permisos de lectura y escritura
-    p = mknod("FIFO2", S_IFIFO | 0666, 0);
-
-    // Verifica si ha ocurrido un error al crear la FIFO
-    if (p == -1) {
-        printf("Ha ocurrido un error.... \n"); 
-        exit(0); 
+    // Abre la FIFO en modo lectura
+    fp = open("FIFO2", O_RDONLY); // Abrimos el FIFO en modo lectura
+    if (fp == -1) {
+        perror("Error al abrir el FIFO para leer");
+        exit(1);
     }
 
-    // Bucle infinito para leer continuamente de la FIFO
     while (1) {
-        fp = open("FIFO2", 0); // Abre la FIFO en modo lectura (flag 0 para lectura)
-        bytesleidos = read(fp, buffer, 1); // Lee 1 byte de la FIFO
-        printf("Obteniendo información..."); 
-
-        // Mientras se siga leyendo algún byte (bytesleidos != 0), sigue imprimiendo el contenido
-        while (bytesleidos != 0) {
-            printf("%s", buffer); 
-            bytesleidos = read(fp, buffer, 1); // Lee el siguiente byte
+        // Intentar leer el mensaje
+        bytesleidos = read(fp, buffer, sizeof(buffer) - 1); // Leemos hasta el tamaño del buffer - 1 para el '\0'
+        
+        // Verifica si se leyeron bytes
+        if (bytesleidos > 0) {
+            buffer[bytesleidos] = '\0'; // Aseguramos que el buffer sea una cadena
+            printf("Mensaje recibido: %s", buffer);
+        } else if (bytesleidos == -1) {
+            perror("Error al leer del FIFO");
+            break; // Salimos si hay un error
         }
-
-        close(fp); 
+        
+        // Salir del bucle si no se lee nada
+        if (bytesleidos == 0) {
+            break; // Puede romper el bucle si no hay más datos
+        }
     }
 
-    return (0); 
+    close(fp); // Cerrar el FIFO al final
+    return 0;
 }
