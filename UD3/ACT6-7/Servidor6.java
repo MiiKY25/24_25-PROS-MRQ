@@ -42,6 +42,7 @@ public class Servidor6 {
 			// Cerrar streams y sockets
 			entrada.close();
 			flujoEntrada.close();
+			flujoSalida.close();
 			clienteConectado.close();
 			servidor.close(); 
 			

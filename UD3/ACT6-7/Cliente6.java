@@ -46,6 +46,8 @@ public class Cliente6 {
 			
 			
 			// Cerrar streams y sockets
+			flujoEntrada.close();
+			entrada.close();
 			flujoSalida.close();
 			Cliente.close();
 
