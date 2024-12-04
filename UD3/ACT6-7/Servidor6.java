@@ -12,7 +12,7 @@ public class Servidor6 {
 	
 	public static void main(String[] args) {
 		
-		int puerto=6011;
+		int puerto=6010;
 		
 		try {
 			ServerSocket servidor = new ServerSocket (puerto);
@@ -23,7 +23,7 @@ public class Servidor6 {
 
 			clienteConectado = servidor.accept();
 			
-			// CreaciÃ³n del flujo de entrada del cliente
+			// Creación del flujo de entrada del cliente
 			InputStream entrada = null;
 			entrada = clienteConectado.getInputStream();
 			DataInputStream flujoEntrada = new DataInputStream (entrada);
@@ -37,7 +37,7 @@ public class Servidor6 {
 			DataOutputStream flujoSalida = new DataOutputStream (clienteConectado.getOutputStream());
 
 			// Enviar el cuadradro al cliente 
-			flujoSalida.writeUTF("\tEl cuadrado del nÃºmero "+num+" es "+cuadrado);
+			flujoSalida.writeUTF("\tEl cuadrado del número "+num+" es "+cuadrado);
 
 			// Cerrar streams y sockets
 			entrada.close();

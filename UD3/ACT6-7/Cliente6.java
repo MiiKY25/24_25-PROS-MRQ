@@ -16,12 +16,12 @@ public class Cliente6 {
 		
 		String host="localhost";
 
-		int puerto = 6011;
+		int puerto = 6010;
 
 		System.out.println("PROGRAMA CLIENTE INICIANDO");
 		
 		//Leer numero de la consola
-		System.out.println("Introduce un nÃºmero");
+		System.out.println("Introduce un número");
 		int num = Integer.parseInt(scanner.nextLine());
 		
 		try {
@@ -33,7 +33,7 @@ public class Cliente6 {
 			//Enviar el numero al servidor
 			flujoSalida.writeUTF(num+"");
 			
-			// CreaciÃ³n del flujo de entrada del servidor
+			// Creación del flujo de entrada del servidor
 			InputStream entrada = null;
 			entrada = Cliente.getInputStream();
 			DataInputStream flujoEntrada = new DataInputStream (entrada);
